@@ -17,4 +17,13 @@ APP.use((req, res, next) => {
 });
 APP.use('/feed', FEED_ROUTES);
 
-APP.listen(8080);
+MONGOOSE.connect('mongodb+srv://admin:admin@cluster0-7jnyx.mongodb.net/posts', {
+  useNewUrlParser: true
+})
+  .then(() => {
+    console.log('connected to DB');
+    APP.listen(8080);
+  })
+  .catch(err => {
+    console.log(err);
+  });
