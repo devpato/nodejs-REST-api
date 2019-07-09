@@ -1,10 +1,22 @@
 const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
 const FEED_CONTROLLER = require('../controllers/feed');
+const { body } = require('express-validator/check');
 module.exports = ROUTER;
 
 //GET feed/posts
 ROUTER.get('/posts', FEED_CONTROLLER.getPosts);
 
 //POST feed/post
-ROUTER.post('/post', FEED_CONTROLLER.createPost);
+ROUTER.post(
+  '/post',
+  [
+    body('title')
+      .trim()
+      .isLength({ min: 7 }),
+    body('content')
+      .trim()
+      .isLength({ min: 5 })
+  ],
+  FEED_CONTROLLER.createPost
+);
