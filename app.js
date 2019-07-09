@@ -1,6 +1,7 @@
 const EXPRESS = require('express');
 const FEED_ROUTES = require('./routes/feed');
 const BODY_PARSER = require('body-parser');
+const MONGOOSE = require('mongoose');
 const APP = EXPRESS();
 
 APP.use(BODY_PARSER.json());
