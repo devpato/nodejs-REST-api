@@ -1,7 +1,7 @@
 const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
 const FEED_CONTROLLER = require('../controllers/feed');
-const { body } = require('express-validator/check');
+const { body } = require('express-validator');
 module.exports = ROUTER;
 
 //GET feed/posts
