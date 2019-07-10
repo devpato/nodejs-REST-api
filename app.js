@@ -3,9 +3,26 @@ const FEED_ROUTES = require('./routes/feed');
 const BODY_PARSER = require('body-parser');
 const MONGOOSE = require('mongoose');
 const APP = EXPRESS();
-const PATH = require('path');
+// const PATH = require('path');
+const MULTER = require('multer');
+const FILE_STORAGE = MULTER.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + '-' + file.originalname);
+  }
+});
+
+const FILE_FILTER = (req, file, cb) => {
+  const mimetypes = ['image/png', 'image/jpg', 'image/jpeg'];
+  cb(null, mimetypes.find(mimetype => mimetype === file.mimetype));
+};
 
 APP.use(BODY_PARSER.json());
+APP.use(
+  MULTER({ storage: FILE_STORAGE, fileFilter: FILE_FILTER }).single('image')
+);
 APP.use(BODY_PARSER.urlencoded({ extended: false }));
 APP.use('/images', EXPRESS.static('images'));
 APP.use((req, res, next) => {
