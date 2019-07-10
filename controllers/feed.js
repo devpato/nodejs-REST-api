@@ -5,11 +5,15 @@ exports.getPosts = (req, res, next) => {
   POST.find()
     .then(posts => {
       res.status(200).json({
+        message: 'Post fetched succesfully',
         posts: posts
       });
     })
     .catch(err => {
-      console.log(err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
     });
 };
 
@@ -38,6 +42,29 @@ exports.createPost = (req, res, next) => {
       res.status(201).json({
         message: 'Post created succesfully!',
         post: createdPost
+      });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.getPost = (req, res, next) => {
+  const POST_ID = req.params.postId;
+  POST.findById(POST_ID)
+    .then(post => {
+      if (!post) {
+        const ERROR = new Error('Post not found');
+        ERROR.statusCode = 404;
+        throw ERROR;
+      }
+      console.log(post);
+      res.status(200).json({
+        message: 'Post feched',
+        post: post
       });
     })
     .catch(err => {
