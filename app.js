@@ -7,7 +7,7 @@ const PATH = require('path');
 
 APP.use(BODY_PARSER.json());
 APP.use(BODY_PARSER.urlencoded({ extended: false }));
-//APP.use('/images', EXPRESS.static(PATH.join__dirname, 'images'));
+APP.use('/images', EXPRESS.static('images'));
 APP.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
