@@ -20,3 +20,5 @@ ROUTER.post(
   ],
   FEED_CONTROLLER.createPost
 );
+
+ROUTER.get('/post/:postId', FEED_CONTROLLER.getPost);
