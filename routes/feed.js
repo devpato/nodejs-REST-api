@@ -2,7 +2,6 @@ const EXPRESS = require('express');
 const ROUTER = EXPRESS.Router();
 const FEED_CONTROLLER = require('../controllers/feed');
 const { body } = require('express-validator');
-module.exports = ROUTER;
 
 //GET feed/posts
 ROUTER.get('/posts', FEED_CONTROLLER.getPosts);
@@ -37,3 +36,5 @@ ROUTER.put(
 );
 
 ROUTER.delete('/post/:postId', FEED_CONTROLLER.deletePost);
+
+module.exports = ROUTER;
