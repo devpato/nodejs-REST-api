@@ -1,5 +1,6 @@
 const EXPRESS = require('express');
 const FEED_ROUTES = require('./routes/feed');
+const AUTH_ROUTES = require('./routes/auth');
 const BODY_PARSER = require('body-parser');
 const MONGOOSE = require('mongoose');
 const APP = EXPRESS();
@@ -35,11 +36,14 @@ APP.use((req, res, next) => {
   next();
 });
 APP.use('/feed', FEED_ROUTES);
+APP.use('/feed', AUTH_ROUTES);
+
 APP.use((error, req, res, next) => {
   console.log(error);
   const STATUS = error.statusCode || 500;
   const MESSAGE = error.message;
-  res.status(STATUS).json({ MESSAGE });
+  const DATA = error.data;
+  res.status(STATUS).json({ message: MESSAGE, data: DATA });
 });
 
 MONGOOSE.connect('mongodb+srv://admin:admin@cluster0-7jnyx.mongodb.net/posts', {
