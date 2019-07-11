@@ -29,6 +29,6 @@ ROUTER.put(
   AUTH_CONTROLLER.signup
 );
 
-//ROUTER.post('/login', AUTH_CONTROLLER.login);
+ROUTER.post('/login', AUTH_CONTROLLER.login);
 
 module.exports = ROUTER;
