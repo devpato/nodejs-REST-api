@@ -22,3 +22,18 @@ ROUTER.post(
 );
 
 ROUTER.get('/post/:postId', FEED_CONTROLLER.getPost);
+
+ROUTER.put(
+  '/post/:postId',
+  [
+    body('title')
+      .trim()
+      .isLength({ min: 5 }),
+    body('content')
+      .trim()
+      .isLength({ min: 5 })
+  ],
+  FEED_CONTROLLER.updatePost
+);
+
+ROUTER.delete('/post/:postId', FEED_CONTROLLER.deletePost);
