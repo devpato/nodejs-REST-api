@@ -36,3 +36,34 @@ exports.signup = (req, res, next) => {
       next(err);
     });
 };
+
+exports.login = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  let loadedUser;
+  User.findOne({ email: email })
+    .then(user => {
+      if (!user) {
+        const ERROR = new Error('User not found ');
+        ERROR.statusCode = 401;
+        ERROR.data = errors.array();
+        throw ERROR;
+      }
+      let loadedUser = user;
+      return bcrypt.compare(password, user.password);
+    })
+    .then(isEqual => {
+      if (!isEqual) {
+        const ERROR = new Error('Wrong password ');
+        ERROR.statusCode = 401;
+        ERROR.data = errors.array();
+        throw ERROR;
+      }
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
