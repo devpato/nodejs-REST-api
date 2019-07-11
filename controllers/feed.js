@@ -140,6 +140,35 @@ exports.updatePost = (req, res, next) => {
     });
 };
 
+exports.deletePost = (req, res, next) => {
+  const POST_ID = req.params.postId;
+
+  POST.findById(POST_ID)
+    .then(post => {
+      //checked loggedIn user
+      if (!post) {
+        const ERROR = new Error('Post not found');
+        ERROR.statusCode = 404;
+        throw ERROR;
+      }
+
+      clearImage(post.imageUrl);
+      return POST.findByIdAndRemove(POST_ID);
+    })
+    .then(() => {
+      res.status(200).json({
+        message: 'Post deleted'
+      });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+//Helper function
 const clearImage = FILE_PATH => {
   FILE_PATH = path.join(__dirname, '..', FILE_PATH);
   fs.unlink(FILE_PATH, err => console.log(err));
