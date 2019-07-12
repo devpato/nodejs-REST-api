@@ -52,7 +52,7 @@ MONGOOSE.connect('mongodb+srv://admin:admin@cluster0-7jnyx.mongodb.net/posts', {
   .then(() => {
     console.log('connected to DB');
     const server = APP.listen(8080);
-    const io = require('socket.io')(server);
+    const io = require('./socket').init(server);
     io.on('connection', socket => {
       console.log('Client connected');
     });
