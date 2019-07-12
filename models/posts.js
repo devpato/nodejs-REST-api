@@ -16,7 +16,8 @@ const POST_SCHEMA = new SCHEMA(
       required: true
     },
     creator: {
-      type: Object,
+      type: SCHEMA.Types.ObjectId,
+      required: 'User',
       required: true
     }
   },
