@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const User = require('../models/user');
 
-exports.getPosts = (req, res, next) => {
+exports.getPosts = async (req, res, next) => {
   const currentPage = req.query.page || 1;
   const perPage = 2;
   let totalItems;
@@ -13,6 +13,7 @@ exports.getPosts = (req, res, next) => {
     .then(count => {
       totalItems = count;
       return POST.find()
+        .populate('creator')
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
