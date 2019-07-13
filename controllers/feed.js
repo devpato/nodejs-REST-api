@@ -11,6 +11,8 @@ exports.getPosts = async (req, res, next) => {
   try {
     const totalItems = await POST.find().countDocuments();
     const posts = await POST.find()
+      .populate('creator')
+      .sort({ createdAt: -1 })
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
 
@@ -120,14 +122,14 @@ exports.updatePost = async (req, res, next) => {
   }
 
   try {
-    const post = await POST.findById(POST_ID);
+    const post = await POST.findById(POST_ID).populate('creator');
     if (!post) {
       const ERROR = new Error('Post not found');
       ERROR.statusCode = 404;
       throw ERROR;
     }
 
-    if (post.creator.toString() !== req.userId) {
+    if (post.creator._id.toString() !== req.userId) {
       const error = new Error('Not authorized');
       error.statusCode = 403;
       throw error;
@@ -141,6 +143,7 @@ exports.updatePost = async (req, res, next) => {
     post.content = CONTENT;
 
     const result = await post.save();
+    io.getIO().emit('posts', { action: 'update', post: result });
     res.status(200).json({
       message: 'Post updated',
       post: result
@@ -175,7 +178,7 @@ exports.deletePost = async (req, res, next) => {
     const user = await User.findById(req.userId);
     user.posts.pull(postId);
     await user.save();
-
+    io.getIO().emit('posts', { actions: 'delete', posts: postId });
     res.status(200).json({ message: 'Deleted post.' });
   } catch (err) {
     if (!err.statusCode) {
